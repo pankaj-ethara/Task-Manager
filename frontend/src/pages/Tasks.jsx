@@ -21,9 +21,28 @@ export default function Tasks() {
     await loadTasks();
   }
 
+  const statusTabs = [
+    { label: 'All', value: '' },
+    { label: 'To Do', value: 'todo' },
+    { label: 'In Progress', value: 'in_progress' },
+    { label: 'Done', value: 'done' }
+  ];
+
   return (
     <main className="page">
-      <div className="page-header"><div><h1>Tasks</h1><p>{user.role === 'admin' ? 'All tasks across projects.' : 'Only tasks assigned to you.'}</p></div><select value={filter} onChange={(e) => setFilter(e.target.value)}><option value="">All Status</option><option value="todo">To Do</option><option value="in_progress">In Progress</option><option value="done">Done</option></select></div>
+      <div className="page-header">
+        <div>
+          <h1>Tasks</h1>
+          <p>{user.role === 'admin' ? 'All tasks across projects.' : 'Only tasks assigned to you.'}</p>
+        </div>
+        <div className="tabs" role="tablist" aria-label="Task status filter">
+          {statusTabs.map((tab) => (
+            <button type="button" key={tab.value || 'all'} className={filter === tab.value ? 'active' : ''} onClick={() => setFilter(tab.value)}>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
       {error && <div className="alert error">{error}</div>}
       <section className="card">
         <div className="table-wrap">

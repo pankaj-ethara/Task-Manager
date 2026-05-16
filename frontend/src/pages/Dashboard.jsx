@@ -26,12 +26,12 @@ export default function Dashboard() {
         </div>
       </div>
       <section className="stats-grid">
-        <StatCard label="Projects" value={summary.total_projects} />
-        <StatCard label="Total Tasks" value={summary.total_tasks} />
-        <StatCard label="To Do" value={summary.todo_tasks} />
-        <StatCard label="In Progress" value={summary.in_progress_tasks} />
-        <StatCard label="Completed" value={summary.done_tasks} />
-        <StatCard label="Overdue" value={summary.overdue_tasks} />
+        <StatCard label="Projects" value={summary.total_projects} tone="blue" />
+        <StatCard label="Total Tasks" value={summary.total_tasks} tone="slate" />
+        <StatCard label="To Do" value={summary.todo_tasks} tone="neutral" />
+        <StatCard label="In Progress" value={summary.in_progress_tasks} tone="amber" />
+        <StatCard label="Completed" value={summary.done_tasks} tone="green" />
+        <StatCard label="Overdue" value={summary.overdue_tasks} tone="red" />
       </section>
       <section className="card">
         <h2>Recent Tasks</h2>

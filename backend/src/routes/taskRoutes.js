@@ -7,6 +7,17 @@ import { canAccessProject, canAccessTask } from '../utils/access.js';
 
 const router = express.Router();
 
+async function getAssignableMember(db, projectId, userId) {
+  return db.get(
+    `SELECT 1
+     FROM project_members pm
+     JOIN users u ON u.id = pm.user_id
+     WHERE pm.project_id = ? AND pm.user_id = ? AND u.role = 'member'`,
+    projectId,
+    userId
+  );
+}
+
 router.get('/', requireAuth, async (req, res, next) => {
   try {
     const db = await getDb();
@@ -59,8 +70,8 @@ router.post('/', requireAuth, requireAdmin, [
     const project = await db.get('SELECT id FROM projects WHERE id = ?', project_id);
     if (!project) return res.status(404).json({ message: 'Project not found.' });
     if (assigned_to) {
-      const membership = await db.get('SELECT 1 FROM project_members WHERE project_id = ? AND user_id = ?', project_id, assigned_to);
-      if (!membership) return res.status(400).json({ message: 'Assigned user must be a member of this project.' });
+      const membership = await getAssignableMember(db, project_id, assigned_to);
+      if (!membership) return res.status(400).json({ message: 'Assigned user must be a member of this project and cannot be an admin.' });
     }
     const result = await db.run(
       'INSERT INTO tasks (title, description, project_id, assigned_to, status, priority, due_date, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -114,8 +125,8 @@ router.put('/:id', requireAuth, [
         due_date: req.body.due_date === undefined ? current.due_date : req.body.due_date
       };
       if (updated.assigned_to) {
-        const membership = await db.get('SELECT 1 FROM project_members WHERE project_id = ? AND user_id = ?', updated.project_id, updated.assigned_to);
-        if (!membership) return res.status(400).json({ message: 'Assigned user must be a member of this project.' });
+        const membership = await getAssignableMember(db, updated.project_id, updated.assigned_to);
+        if (!membership) return res.status(400).json({ message: 'Assigned user must be a member of this project and cannot be an admin.' });
       }
       await db.run(
         'UPDATE tasks SET title = ?, description = ?, project_id = ?, assigned_to = ?, status = ?, priority = ?, due_date = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',

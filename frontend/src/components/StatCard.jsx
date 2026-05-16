@@ -1,6 +1,6 @@
-export default function StatCard({ label, value }) {
+export default function StatCard({ label, value, tone = 'neutral' }) {
   return (
-    <div className="stat-card">
+    <div className={`stat-card ${tone}`}>
       <p>{label}</p>
       <strong>{value}</strong>
     </div>

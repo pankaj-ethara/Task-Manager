@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link className="brand" to="/">Team Task Manager</Link>
+      <Link className="brand" to="/"><span>TT</span>Team Task Manager</Link>
       <div className="navlinks">
         <NavLink to="/">Dashboard</NavLink>
         <NavLink to="/projects">Projects</NavLink>

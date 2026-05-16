@@ -38,7 +38,15 @@ export default function Projects() {
 
   return (
     <main className="page">
-      <div className="page-header"><div><h1>Projects</h1><p>Create projects, manage team members, and track work.</p></div></div>
+      <div className="page-header">
+        <div>
+          <h1>Projects</h1>
+          <p>Create projects, manage team members, and track work.</p>
+        </div>
+        <div className="header-metrics">
+          <span>{projects.length} projects</span>
+        </div>
+      </div>
       {error && <div className="alert error">{error}</div>}
       {isAdmin && (
         <section className="card">
